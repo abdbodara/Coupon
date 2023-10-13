@@ -539,6 +539,9 @@ textarea:not(:focus):valid ~ .floating-label {
 .animation-jump {
   animation: love 0.3s linear forwards;
 }
+.animation-like {
+  animation: like 0.3s linear forwards;
+}
 @keyframes love {
   0% {
     transform: scale(1);
@@ -566,7 +569,7 @@ textarea:not(:focus):valid ~ .floating-label {
 }
 
 .bg_img {
-  background-image: linear-gradient(148deg,#153966 14%,#0c244a 86%);
+  background-image: linear-gradient(148deg, #153966 14%, #0c244a 86%);
 }
 
 /* @media (max-width:1023px) {
@@ -575,8 +578,7 @@ textarea:not(:focus):valid ~ .floating-label {
   }
 } */
 
-
-@media (min-width:375px) and (max-width:1020px) {
+@media (min-width: 375px) and (max-width: 1020px) {
   .main_content {
     flex-wrap: wrap !important;
     flex: none !important;

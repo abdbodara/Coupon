@@ -26,18 +26,6 @@ const coupon = new mongoose.Schema(
       type: String,
       required: true,
     },
-    categories: {
-      type: String,
-      enum: [
-        "Most Used",
-        "Travel",
-        "Recharge",
-        "Fashion",
-        "Food",
-        "Electronics",
-      ],
-      default: "Most Used",
-    },
     status: {
       type: String,
       enum: ["Active", "Expired"],
@@ -50,6 +38,10 @@ const coupon = new mongoose.Schema(
     MerchantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "merchantmodel",
+    },
+    categoriesId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "categories",
     },
   },
   {

@@ -31,7 +31,8 @@ const Layout = ({ children }) => {
   return (
     <div>
       {router.pathname === "/indulge" ||
-      router.pathname === "/coupon_code/[id]" ? (
+      router.pathname === "/coupon_code/[id]" ||
+      router.pathname === "/coupon_codes/[id]" ? (
         ""
       ) : (
         <Header />
@@ -46,7 +47,8 @@ const Layout = ({ children }) => {
         </a>
       )}
       {router.pathname === "/indulge" ||
-      router.pathname === "/coupon_code/[id]" ? (
+      router.pathname === "/coupon_code/[id]" ||
+      router.pathname === "/coupon_codes/[id]" ? (
         ""
       ) : (
         <Footer />

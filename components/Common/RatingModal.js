@@ -1,34 +1,43 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Rating from "react-rating";
 import { PiStarThin } from "react-icons/pi";
 import { RiStarFill } from "react-icons/ri";
 import axios from "axios";
+import { useRouter } from "next/router";
+import { useCreateRatingMutation } from "../../app/api";
+import { useSelectedCardContext } from "@/context/createContext";
 
 export const RatingModal = (props) => {
-  const itemValue = props.data.MerchantId._id;
-
+  const router = useRouter();
+  const [createRating] = useCreateRatingMutation();
+  const { setRating, setState } = useSelectedCardContext();
+  const itemValue = props?.data?.MerchantId?._id;
+  const routerValue =
+    router.pathname === "/[slug]" ? itemValue : props?.data?._id;
   const [data, setData] = useState({
-    itemId: itemValue,
+    itemId: routerValue,
     value: "",
   });
+
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      itemId: routerValue,
+    }));
+  }, [routerValue]);
 
   const handleStarClick = async (value) => {
     try {
       const newData = { ...data, value };
-      const token = JSON.parse(localStorage.getItem("user"));
-      const response = await axios.post(
-        "http://localhost:3000/api/rating",
-        newData,
-        {
-          headers: {
-            Authorization: `Bearer ${token.token}`,
-          },
-        }
-      );
-      console.log("🚀 ~ file: RatingModal.js:30 ~ handleStarClick ~ response:", response)
-      props.setIsOpen(false);
+      createRating(newData).then(async (res) => {
+        props.setIsOpen(false);
+        await axios.get("http://localhost:3000/api/getRating").then((res) => {
+          setRating(res.data.data);
+          setState(true);
+        });
+      });
     } catch (error) {
       console.error("Error submitting rating", error.message);
     }
@@ -70,7 +79,12 @@ export const RatingModal = (props) => {
                   </button>
                   <div>
                     <h1 className="text-[22px] block text-center text-[#575757] mb-[26px]">
-                      Rate <strong className="font-bold">Dell</strong>
+                      Rate{" "}
+                      <strong className="font-bold">
+                        {router.pathname === "/[slug]"
+                          ? props?.data?.MerchantId?.RetailerName
+                          : props?.data?.categoriesName}
+                      </strong>
                     </h1>
                     <div className="flex justify-center items-center">
                       <Rating
@@ -85,8 +99,10 @@ export const RatingModal = (props) => {
                     </div>
                     <div>
                       <p className="text-[#575757] block my-[16px] text-center text-[14px]">
-                        Rated 4/5, Out of
-                        <span className="go-r-count">48</span>
+                        Rated 4/5, Out of{" "}
+                        <span className="go-r-count">
+                          {props.rating.length}
+                        </span>{" "}
                         Votes
                       </p>
                     </div>

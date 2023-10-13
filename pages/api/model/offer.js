@@ -26,18 +26,6 @@ const Offer = new mongoose.Schema(
       type: String,
       required: true,
     },
-    categories: {
-      type: String,
-      enum: [
-        "Most Used",
-        "Travel",
-        "Recharge",
-        "Fashion",
-        "Food",
-        "Electronics",
-      ],
-      default: "Most Used",
-    },
     status: {
       type: Boolean,
       default: true,
@@ -53,6 +41,10 @@ const Offer = new mongoose.Schema(
     MerchantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "merchantmodel",
+    },
+    categoriesId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "categories",
     },
   },
   {

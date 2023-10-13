@@ -11,7 +11,7 @@ import {
 } from "react-icons/bs";
 import { HiTicket } from "react-icons/hi";
 import { FiGrid } from "react-icons/fi";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineRight } from "react-icons/ai";
 import { RiQuestionFill } from "react-icons/ri";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { MdCardGiftcard } from "react-icons/md";
@@ -21,32 +21,32 @@ import Store from "./store";
 import Categories from "./categories";
 import Link from "next/link";
 
-const cardData = [
-  {
-    icon: (
-      <SiHomeassistantcommunitystore className="text-[#60a600] text-[18px]" />
-    ),
-    text: "Stores Followed",
-    num: "7",
-  },
-  {
-    icon: <BiSolidTag className="text-[#60a600] text-[24px]" />,
-    text: "Categories Followed",
-    num: "5",
-  },
-  {
-    icon: <BiSolidCoupon className="text-[#60a600] text-[22px]" />,
-    text: "Coupons/Offers Saved",
-    num: "2",
-  },
-  {
-    icon: <MdCardGiftcard className="text-[#60a600] text-[24px]" />,
-    text: "Gift Card Orders",
-    num: "0",
-  },
-];
+const Submission = ({ recomandedstore, data }) => {
+  const cardData = [
+    {
+      icon: (
+        <SiHomeassistantcommunitystore className="text-[#60a600] text-[18px]" />
+      ),
+      text: "Stores Followed",
+      num: "7",
+    },
+    {
+      icon: <BiSolidTag className="text-[#60a600] text-[24px]" />,
+      text: "Categories Followed",
+      num: "5",
+    },
+    {
+      icon: <BiSolidCoupon className="text-[#60a600] text-[22px]" />,
+      text: "Coupons/Offers Saved",
+      num: data?.favoriteCoupon?.length + data?.favoriteOffer?.length,
+    },
+    {
+      icon: <MdCardGiftcard className="text-[#60a600] text-[24px]" />,
+      text: "Gift Card Orders",
+      num: "0",
+    },
+  ];
 
-const Submission = ({ recomandedstore }) => {
   const [click, setClick] = useState("overview");
   const [tab, setTab] = useState("reject");
   const [testtab, setTesttab] = useState(false);
@@ -409,11 +409,68 @@ const Submission = ({ recomandedstore }) => {
               </div>
             </>
           ) : click === "Saved" ? (
-            <>
-              <p className="text-[#383d4e] text-[14px] font-bold mb-[14px] lg:mt-0 mt-[14px] lg:py-0 py-[12px]">
-                Here Are The Coupons/Offers Saved
-              </p>
-            </>
+            <div className="grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3">
+              {data.favoriteCoupon.length || data.favoriteOffer.length !== 0 ? (
+                <>
+                  {data?.favoriteCoupon.map((item, key) => (
+                    <div
+                      key={key}
+                      className="border-[#e7e7e7] border-[1px] cursor-pointer bg-white rounded-[16px] hover:bg-[#f4ffe6] hover:shadow-[0_5px_15px_rgba(0,0,0,.3)] p-[12px]  transition-main overflow-hidden"
+                    >
+                      <Image
+                        className="max-h-[40px]"
+                        width={40}
+                        height={40}
+                        src="/Assets/Images/rapido-logo.jpg"
+                        alt="Rapido"
+                      />
+                      <p className="block text-[24px] my-[6px] font-medium text-[#515151]">
+                        {item.Title}
+                      </p>
+                      <p className="text-[14px] hover:underline min-h-[55px] text-[#515151] leading-[24px] block my-3">
+                        {item.Description}
+                      </p>
+                      <button className="text-[#2491ef] flex items-center gap-[5px]">
+                        See All {item.RetailerName} offers
+                        <span className="w-[20px] h-[20px] flex items-center justify-center bg-[#2491ef]  text-white rounded-full">
+                          <AiOutlineRight className="" />
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                  {data?.favoriteOffer.map((item, key) => (
+                    <div
+                      key={key}
+                      className="border-[#e7e7e7] border-[1px] cursor-pointer bg-white rounded-[16px] hover:bg-[#f4ffe6] hover:shadow-[0_5px_15px_rgba(0,0,0,.3)] p-[12px]  transition-main overflow-hidden"
+                    >
+                      <Image
+                        className="max-h-[40px]"
+                        width={40}
+                        height={40}
+                        src="/Assets/Images/rapido-logo.jpg"
+                        alt="Rapido"
+                      />
+                      <p className="block text-[24px] my-[6px] font-medium text-[#515151]">
+                        {item.title}
+                      </p>
+                      <p className="text-[14px] hover:underline min-h-[55px] text-[#515151] leading-[24px] block my-3">
+                        {item.desc}
+                      </p>
+                      <button className="text-[#2491ef] flex items-center gap-[5px]">
+                        See All {item.RetailerName} offers
+                        <span className="w-[20px] h-[20px] flex items-center justify-center bg-[#2491ef]  text-white rounded-full">
+                          <AiOutlineRight className="" />
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p className="text-[#383d4e] text-[14px] font-bold mb-[14px] lg:mt-0 mt-[14px] lg:py-0 py-[12px]">
+                  Here Are The Coupons/Offers Saved
+                </p>
+              )}
+            </div>
           ) : click === "Store" ? (
             <>
               <Store recomandedstore={recomandedstore} />

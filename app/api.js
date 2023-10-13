@@ -50,6 +50,41 @@ export const api = createApi({
         body: payload,
       }),
     }),
+    createRating: builder.mutation({
+      query: (payload) => ({
+        url: "/rating",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    addComment: builder.mutation({
+      query: (payload) => ({
+        url: "/addComment",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    addReply: builder.mutation({
+      query: (payload) => ({
+        url: "/addReply",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    favoriteCoupon: builder.mutation({
+      query: (payload) => ({
+        url: `/favoriteCoupon/${payload}`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    favoriteOffer: builder.mutation({
+      query: (payload) => ({
+        url: `/favoriteOffer/${payload}`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -59,5 +94,10 @@ export const {
   useCreateSubscribeMutation,
   useJoinDealsMutation,
   useJoinPlatformsMutation,
+  useCreateRatingMutation,
+  useAddCommentMutation,
+  useAddReplyMutation,
+  useFavoriteCouponMutation,
+  useFavoriteOfferMutation,
 } = api;
 export default api;

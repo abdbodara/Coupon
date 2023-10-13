@@ -15,6 +15,10 @@ const Brand = require("./router/brand");
 const CreateDeals = require("./router/deals");
 const Subscribe = require("./router/subscribe");
 const Join_deals = require("./router/join_deals");
+const categories = require("./router/categories");
+// const comment = require("./router/comments");
+// const Popular_store = require("./router/popular_store");
+// const banner = require("./router/banner");
 const PORT = process.env.PORT || 3000;
 
 const dev = process.env.NODE_ENV !== "production";
@@ -35,6 +39,10 @@ server.prepare().then(() => {
   app.use("/api", CreateDeals);
   app.use("/api", Subscribe);
   app.use("/api", Join_deals);
+  app.use("/api", categories);
+  // app.use("/api", comment);
+  // app.use("/api", Popular_store);
+  // app.use("/api", banner);
   app.use("/uploads", express.static("uploads"));
   app.get("*", routerHandler);
   connectDB();

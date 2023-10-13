@@ -3,26 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import Subscribe from "../deals/Subscribe";
 import Submission from "./submission";
-import { useRouter } from "next/router";
 import axios from "axios";
+import { useSelectedCardContext } from "../../context/createContext";
 
 const UserProfile = ({ recomandedstore }) => {
-
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchdata = async () => {
-      const value = await localStorage.getItem("user");
-      if (value) {
-        const parsedData = JSON.parse(value);
-        setData(parsedData);
-        setIsLoading(false);
-      }
-    };
-    fetchdata();
-  }, [router]);
+  const { profile, isLoading } = useSelectedCardContext();
 
   if (isLoading) {
     return <div></div>;
@@ -48,7 +33,7 @@ const UserProfile = ({ recomandedstore }) => {
               <div className="lg:w-[232px] w-[160px] lg:h-[140px] h-[125px] lg:p-[20px_0] p-[12px_0] border-[1px] border-[#d6d8da] bg-white rounded">
                 <div className="border-[#d6d8daa6] border-[8px] w-[100px] h-[100px] rounded-full mx-auto">
                   <Image
-                    src={data.image}
+                    src={profile.image}
                     alt="image"
                     width={100}
                     height={100}
@@ -58,16 +43,16 @@ const UserProfile = ({ recomandedstore }) => {
               </div>
               <h1 className="text-[30px] text-white font-bold leading-[37px] mb-[30px] lg:block hidden">
                 Hi, <br />
-                {data.fullName}
+                {profile.fullName}
               </h1>
             </div>
           </div>
         </div>
         <h1 className="text-[16px] text-center text-[#16171a] font-bold leading-[37px] block lg:hidden mt-[34px] mb-1">
-          Hi,{data.fullName}
+          Hi,{profile.fullName}
         </h1>
       </div>
-      <Submission recomandedstore={recomandedstore} />
+      <Submission recomandedstore={recomandedstore} data={profile} />
       <Subscribe />
     </div>
   );

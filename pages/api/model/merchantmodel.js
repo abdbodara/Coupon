@@ -14,11 +14,6 @@ const Merchants = new mongoose.Schema(
     RetailerRank: {
       type: Number,
     },
-    Categories: {
-      type: String,
-      enum: ["laptop", "fashion", "mobile", "tv", " food"],
-      default: "laptop",
-    },
     SlugUrl: {
       type: String,
     },
@@ -57,6 +52,10 @@ const Merchants = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
+    },
+    categoriesId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "categories",
     },
     status: {
       type: Boolean,

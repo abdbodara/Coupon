@@ -1,6 +1,6 @@
 import axios from "axios";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { BiSolidLike } from "react-icons/bi";
 import { BsShare } from "react-icons/bs";
 import { HiShare } from "react-icons/hi";
@@ -10,12 +10,16 @@ import Subscribe from "../deals/Subscribe";
 import Link from "next/link";
 
 const Reddem = ({ offer, offerData }) => {
-  console.log("🚀 ~ file: [id].js:13 ~ Reddem ~ offer:", offer)
   const openInNewTab = (url) => {
     window.open(url);
   };
-
   const displayedCardData = offerData ? offerData.slice(0, 3) : offerData;
+  const [copy, setCopy] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(offer.CouponCode);
+    setCopy(true);
+  };
 
   return (
     <div>
@@ -49,10 +53,10 @@ const Reddem = ({ offer, offerData }) => {
               Back to Emma Mattress coupons page
             </a>
             <div className="inline-block align-middle w-[60%] max-lg:w-full p-[24px] max-lg:py-[10px] max-lg:px-[5px] max-lg:pb-0">
-              <div className="max-md:text-center max-md:mb-[12px] flex flex-row-reverse text-start mb-[10px] max-sm:items-center">
+              <div className="max-md:text-center max-md:mb-[12px] flex-row-reverse text-start mb-[10px] max-sm:items-center">
                 <span className="float-right w-[125px] max-sm:w-[215px] h-[50px] leading-[50px] mt-0 rounded bg-[#fff] my-0 mx-auto inline-block max-sm:h-[50px] max-sm:leading-[50px] max-sm:border-[0.6px] max-sm:border-[#d6d8da] max-sm:rounded-md max-sm:mr-0">
                   <Image
-                    src={`/uploads/${offer.logo}`}
+                    src={`/uploads/${offer.MerchantId.RetailerLogo}`}
                     alt=""
                     width={100}
                     height={40}
@@ -71,15 +75,18 @@ const Reddem = ({ offer, offerData }) => {
                 </div>
               </div>
               <small className="text-[12px] text-[#000] block text-center font-[700] max-lg:hidden">
-                Your Offer Has Been Activated On The Website Already
+                Use this coupon code at checkout:
               </small>
               <div className="py-[5px] px-[5px] pl-[15px] bg-[#f5f5f5] rounded-none items-center border-dashed border-1 border-[#8db654] justify-between hidden max-lg:flex">
                 <p className="border-0 w-auto h-auto leading-[1] text-start text-[16px] font-[700] flex-[0 0 calc(100% - 120px)] inline-block align-middle rounded-sm text-[#16171a]">
-                  {offer.offer}
+                  {offer.CouponCode}
                 </p>
-                {/* <button className="w-[100px] h-[35px] rounded inline-flex items-center justify-center text-[12px] font-[500] text-[#fff] align-middle bg-[#2491ef] uppercase border-0">
-                  Copy Code
-                </button> */}
+                <button
+                  className="w-[100px] h-[35px] rounded inline-flex items-center justify-center text-[12px] font-[500] text-[#fff] align-middle bg-[#2491ef] uppercase border-0"
+                  onClick={handleCopy}
+                >
+                  {copy ? "COPIED" : "COPY CODE"}
+                </button>
               </div>
               <div className="justify-between relative mt-2 max-lg:flex hidden">
                 <a
@@ -104,13 +111,18 @@ const Reddem = ({ offer, offerData }) => {
                   </span>
                 </a>
               </div>
-              <div className="max-lg:hidden">
+              <div className="max-lg:hidden flex">
                 <p className="text-[#000] font-[700] h-[63px] leading-[63px] text-[26px] inline-block align-middle w-[100%] rounded-sm border-dashed border-2 border-[#000] bg-[#f0f0f0] text-center my-[26px]">
-                  {offer.offer}
+                  {offer.CouponCode}
                 </p>
-                {/* <button className="h-[65px] text-[23px] leading-[65px] w-[36%] inline-block rounded-sm text-[#fff] align-middle bg-[#2491ef] uppercase border-0 ml-1 font-[400]">
-                  Copy Code
-                </button> */}
+                <button
+                  onClick={handleCopy}
+                  className={`h-[63px] my-[26px] text-[23px] leading-[65px] w-[36%] inline-block rounded-sm text-[#fff] align-middle ${
+                    copy ? "bg-[#8eb55a]" : "bg-[#2491ef]"
+                  } uppercase border-0 ml-1 font-[400]`}
+                >
+                  {copy ? "COPIED" : "COPY CODE"}
+                </button>
               </div>
               <button
                 className="text-[14px] max-lg:hidden mt-[10px] text-[#2491ef] m-auto underline block text-center font-[400]"
@@ -139,12 +151,12 @@ const Reddem = ({ offer, offerData }) => {
                   Coupon/Offer Description
                 </p>
                 <div className="p-0 block mt-0 max-h-[34px] overflow-hidden relative text-[#515151]">
-                  {offer.conditions}
+                  {offer.Conditions}
                 </div>
               </div>
               <div className="max-h-[98px] overflow-y-auto px-1 py-3 text-[#515151] max-lg:hidden">
                 <ul className="text-[#373737] leading-[22px] pl-[16px] mx-auto my-[24px] mt-0 list-decimal text-[14px]">
-                  {offer.conditions}
+                  {offer.Conditions}
                 </ul>
               </div>
             </div>
@@ -165,17 +177,17 @@ const Reddem = ({ offer, offerData }) => {
                 className="w-[32.2%] max-lg:w-[220px] rounded align-top bg-[#fff] text-[#515151] whitespace-normal border-[0.6px] border-[#d6d8da] p-3 mb-3 inline-block hover:bg-[#f4ffe6] hover:shadow-[0_5px_15px_#0000004d] transition duration-300 ease"
               >
                 <Image
-                  src={`/uploads/${item.logo}`}
+                  src={`/uploads/${item.MerchantId.RetailerLogo}`}
                   alt=""
                   width={100}
                   height={40}
                   className="object-cover w-[100px] h-[40px]"
                 />
                 <p className="text-[24px] max-lg:text-[15px] leading-[normal] font-[600] my-[6px] mx-0">
-                  <span> {item.title}</span>
+                  <span> {item.Title}</span>
                 </p>
                 <p className="text-[14px] max-lg:text-[12px] min-h-[55px] leading-[18px] font-[300] my-[14px]">
-                  {item.desc}
+                  {item.Description}
                 </p>
                 <a
                   href=""
@@ -208,7 +220,7 @@ export async function getServerSideProps(context) {
       `http://localhost:3000/api/publiccoupon/${id}`
     );
 
-    const getData = await axios.get("http://localhost:3000/api/getOffer");
+    const getData = await axios.get("http://localhost:3000/api/getCoupons");
     const offer = response.data.data;
     const offerData = getData.data.data;
     return {

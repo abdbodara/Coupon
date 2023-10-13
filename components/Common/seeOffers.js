@@ -1,93 +1,31 @@
-import React, { useState } from "react";
 import Link from "next/link";
 import { BiSolidCheckCircle } from "react-icons/bi";
 import Image from "next/image";
-import flight from "../../public/Assets/Images/flight-logo.jpg";
 import Subscribe from "../../pages/deals/Subscribe";
 import { useRouter } from "next/router";
-import fashion from "../../public/Assets/Images/fashion-logo.jpg";
-import electronics from "../../public/Assets/Images/electronics-logo.jpg";
-import beauty from "../../public/Assets/Images/beauty-logo.jpg";
-
-const Categories = [
-  {
-    img: flight,
-    coupone: "494 Coupons",
-    offer: "629 Offers",
-    text: "Flight",
-  },
-  {
-    img: fashion,
-    coupone: "877 Coupons",
-    offer: "3,718 Offers",
-    text: "Fashion",
-  },
-  {
-    img: electronics,
-    coupone: "206 Coupons",
-    offer: "1,199 Offers",
-    text: "Electronics",
-  },
-  {
-    img: beauty,
-    coupone: "1,060 Coupons",
-    offer: "3173 Offers",
-    text: "Beauty",
-  },
-];
-const Offer = [
-  { text: "MakeMyTrip", coupon: " 54 Coupons", offer: "8 Offers" },
-  { text: "Amazon", coupon: " 3 Coupons", offer: "73 Offers" },
-  { text: "MuscleBlaze", coupon: " 27 Coupons", offer: "61 Offers" },
-  { text: "Rapido", coupon: " 23 Coupons", offer: "10 Offers" },
-  { text: "Dell", coupon: " 37 Coupons", offer: "16 Offers" },
-  { text: "Paytm", coupon: " 74 Coupons", offer: "1 Offers" },
-  { text: "Bookmyshow", coupon: " 7 Coupons", offer: "47 Offers" },
-  { text: "Croma", coupon: " 38 Coupons", offer: "37 Offers" },
-  { text: "Swiggy", coupon: " 47 Coupons", offer: "18 Offers" },
-  { text: "Dominos", coupon: " 10 Coupons", offer: "12 Offers" },
-  { text: "Adidas", coupon: " 0 Coupons", offer: "15 Offers" },
-  { text: "UBER", coupon: " 26 Coupons", offer: "15 Offers" },
-  { text: "HappyEasyGo", coupon: " 18 Coupons", offer: "1 Offers" },
-  { text: "Pepperfry", coupon: " 10 Coupons", offer: "31 Offers" },
-  { text: "GoDaddy", coupon: " 47 Coupons", offer: "19 Offers" },
-  { text: "Myntra", coupon: " 45 Coupons", offer: "42 Offers" },
-  { text: "Tata CLiQ", coupon: " 20 Coupons", offer: "22 Offers" },
-  { text: "AJIO", coupon: " 35 Coupons", offer: "33 Offers" },
-  { text: "ZoomCar", coupon: " 24 Coupons", offer: "6 Offers" },
-  { text: "OYO Rooms", coupon: " 33 Coupons", offer: "6 Offers" },
-  { text: "Nykaa", coupon: " 5 Coupons", offer: "82 Offers" },
-  { text: "Zomato", coupon: " 67 Coupons", offer: "6 Offers" },
-  { text: "McDonalds", coupon: " 10 Coupons", offer: "18 Offers" },
-  { text: "Decathlon", coupon: " 3 Coupons", offer: "35 Offers" },
-  { text: "Goibibo", coupon: " 51 Coupons", offer: "7 Offers" },
-  { text: "Udemy", coupon: " 6 Coupons", offer: "45 Offers" },
-  { text: "Zivame", coupon: " 17 Coupons", offer: "30 Offers" },
-  { text: "1mg", coupon: " 51 Coupons", offer: "7 Offers" },
-  { text: "Beardo", coupon: " 6 Coupons", offer: "45 Offers" },
-  { text: "Cleartrip", coupon: " 17 Coupons", offer: "30 Offers" },
-  { text: "Booking", coupon: " 0 Coupons", offer: "49 Offers" },
-  { text: "BigBasket", coupon: " 16 Coupons", offer: "41 Offers" },
-  { text: "PharmEasy", coupon: " 23 Coupons", offer: "18 Offers" },
-  { text: "Ola Cabs", coupon: " 26 Coupons", offer: "21 Offers" },
-  { text: "FirstCry", coupon: " 76 Coupons", offer: "12 Offers" },
-  { text: "Klook", coupon: " 9 Coupons", offer: "36 Offers" },
-  { text: "Behrouz Biryani", coupon: " 15 Coupons", offer: "23 Offers" },
-  { text: "Faasos", coupon: " 7 Coupons", offer: "11 Offers" },
-  { text: "Abhibus", coupon: " 28 Coupons", offer: "10 Offers" },
-  { text: "Etihad Airways", coupon: " 8 Coupons", offer: "31 Offers" },
-  { text: "Malaysia Airlines", coupon: " 1 Coupons", offer: "6 Offers" },
-  { text: "Revv", coupon: " 5 Coupons", offer: "5 Offers" },
-];
-
+import React, { useState } from "react";
 const SeeOffers = (props) => {
   const router = useRouter();
   const [click, setClick] = useState("store");
   const [open, setOpen] = useState(false);
   const [selectedLetter, setSelectedLetter] = useState("");
-  const filteredOffers = props?.value?.filter((data) =>
-    selectedLetter ? data?.text?.startsWith(selectedLetter) : true
+  const filteredOffers = props?.value?.data?.filter((data) =>
+    selectedLetter ? data?.RetailerName?.startsWith(selectedLetter) : true
   );
+  const filterCoupons = props?.data?.filter((data) =>
+    selectedLetter ? data?.categoriesName?.startsWith(selectedLetter) : true
+  );
+
+  const test = props?.value?.count.filter((item) => item);
+
+  const countMap = {};
+  test?.forEach((item) => {
+    countMap[item._id] = {
+      couponCount: item.couponCount,
+      offerCount: item.offerCount,
+    };
+  });
+  const data = props?.data ? props?.data?.slice(0, 4) : props?.data;
 
   return (
     <div>
@@ -98,7 +36,11 @@ const SeeOffers = (props) => {
               Home
             </Link>
             <span className="px-[4px]">/</span>
-            <p>Categories</p>
+            {router.pathname === "/stores" ? (
+              <p>Merchants</p>
+            ) : (
+              <p>Categories</p>
+            )}
           </div>
           <div className="flex lg:gap-[24px] gap-[12px]">
             <div className="lg:min-w-[240px] min-w-[100px] lg:h-[180px] h-[80px] bg-[#8db654] rounded flex justify-center items-center text-white lg:text-[28px] text-[14px] z-[1]">
@@ -168,7 +110,7 @@ const SeeOffers = (props) => {
                   <p className="text-[14px]">Verified On: 11/08/2023, (Fri)</p>
                 </div>
               </div>
-              <div className="border-[#e7e7e7] p-[18px] rounded-md bg-white lg:border-[1px] lg:pt-[20px] mt-[18px] text-[#16171a] lg:min-w-[240px] w-[240px] lg:block hidden">
+              <div className="border-[#e7e7e7] mb-5 p-[18px] rounded-md bg-white lg:border-[1px] lg:pt-[20px] mt-[18px] text-[#16171a] lg:min-w-[240px] w-[240px] lg:block hidden">
                 <Link href="/categories">
                   <button
                     onClick={() => setClick("categories")}
@@ -253,7 +195,8 @@ const SeeOffers = (props) => {
                 <div className="flex gap-[12px] gap-y-[18px] mt-[12px] pb-[28px] overflow-x-auto">
                   {router.pathname === "/stores" && (
                     <>
-                      {props.value.map((data, key) => {
+                      {props?.value?.data?.map((data, key) => {
+                        const counts = countMap[data._id];
                         return (
                           <div
                             key={key}
@@ -274,9 +217,9 @@ const SeeOffers = (props) => {
                               />
                             </div>
                             <button className="border-t-[#e7e7e7] border-t-[1px] w-full py-[12px] text-[12px] text-black">
-                              Coupons 1
+                              Coupons {counts ? counts.couponCount : 0}
                               <span className="text-[#e7e7e7] px-[6px]">|</span>
-                              Offers 2
+                              Offers {counts ? counts.offerCount : 0}
                             </button>
                           </div>
                         );
@@ -285,28 +228,35 @@ const SeeOffers = (props) => {
                   )}
                   {router.pathname === "/categories" && (
                     <>
-                      {Categories.map((data, key) => {
+                      {data.map((item, key) => {
                         return (
                           <div
                             key={key}
-                            className="border-[#e7e7e7] border-[1px] bg-white rounded-md hover:shadow-[0_5px_15px_rgba(0,0,0,.3)] lg:w-[22.5%] min-w-[150px] w-[44%] transition-main overflow-hidden"
+                            className="border-[#e7e7e7] cursor-pointer border-[1px] bg-white rounded-md hover:shadow-[0_5px_15px_rgba(0,0,0,.3)] lg:w-[22.5%] min-w-[150px] w-[44%] transition-main overflow-hidden"
                           >
-                            <div className="flex gap-[10px] items-center">
+                            <div
+                              className="flex gap-[10px] items-center"
+                              onClick={() =>
+                                router.push(`/product_categories/${item._id}`)
+                              }
+                            >
                               <div className="h-[52px] w-[52px] inline-block ml-[12px] mt-[12px] rounded-full overflow-hidden">
                                 <Image
-                                  src={data.img}
+                                  src={`/uploads/${item.categoriesImage}`}
+                                  width={100}
+                                  height={100}
                                   alt="myntra-logo"
                                   className="max-w-[110%] max-h-[100%] mx-auto object-cover"
                                 />
                               </div>
                               <p className="text-[#212121] font-bold text-[14px] mt-[6px]">
-                                {data.text}
+                                {item.categoriesName}
                               </p>
                             </div>
                             <button className="border-t-[#e7e7e7] border-t-[1px] w-full py-[12px] text-[12px] text-black">
-                              {data.coupone}
+                              {item.couponCount} Coupons
                               <span className="text-[#e7e7e7] px-[6px]">|</span>
-                              {data.offer}
+                              {item.offerCount} Offers
                             </button>
                           </div>
                         );
@@ -339,15 +289,41 @@ const SeeOffers = (props) => {
                 </div>
               </div>
               <div className="grid lg:grid-cols-3 grid-cols-2 gap-y-[18px] mb-[40px]">
-                {filteredOffers?.map((data, key) => (
+                {filteredOffers?.map((item, key) => (
                   <div key={key}>
-                    <label className="text-[14px] font-bold">
-                      {data.RetailerName}
+                    <label
+                      className="text-[14px] font-bold cursor-pointer"
+                      onClick={() =>
+                        router.push(
+                          `/${item.RetailerName}?merchantId=${item._id}`
+                        )
+                      }
+                    >
+                      {item.RetailerName}
                     </label>
                     <p className="text-[#515151] lg:text-[14px] text-[12px] flex mb-[14px]">
-                      {data.coupon}
+                      {/* {item.coupon} */} 1 Coupon
                       <span className="block lg:px-[8px] px-[4px]">|</span>
-                      {data.offer}
+                      {/* {item.offer} */} 2 Offer
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="grid lg:grid-cols-3 grid-cols-2 gap-y-[18px] mb-[40px]">
+                {filterCoupons?.map((item, key) => (
+                  <div key={key}>
+                    <label
+                      className="text-[14px] font-bold cursor-pointer"
+                      onClick={() =>
+                        router.push(`/product_categories/${item._id}`)
+                      }
+                    >
+                      {item.categoriesName}
+                    </label>
+                    <p className="text-[#515151] lg:text-[14px] text-[12px] flex mb-[14px]">
+                      {/* {item.coupon} */} 1 Coupon
+                      <span className="block lg:px-[8px] px-[4px]">|</span>
+                      {/* {item.offer} */} 2 Offer
                     </p>
                   </div>
                 ))}

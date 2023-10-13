@@ -7,25 +7,70 @@ import amazone from "../../public/Assets/Images/amazon-logo.jpg";
 import muscle from "../../public/Assets/Images/muscleblaze-logo.jpg";
 import { BiChevronRight } from "react-icons/bi";
 
-const SliderData = [
-  {
-    img: trip,
-    img2: amazone,
-    img3: muscle,
-  },
-  {
-    img: trip,
-    img2: amazone,
-    img3: muscle,
-  },
-  {
-    img: trip,
-    img2: amazone,
-    img3: muscle,
-  },
-];
+// const SliderData = [
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+//   {
+//     img: trip,
+//     img2: amazone,
+//     img3: muscle,
+//   },
+// ];
 
-const PopularStore = () => {
+const PopularStore = ({ data }) => {
   const settings = {
     dots: true,
     infinite: false,
@@ -34,6 +79,11 @@ const PopularStore = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
+  const value1 = data ? data.slice(0, 1) : data;
+  const value2 = data ? data.slice(1, 2) : data;
+  const value3 = data ? data.slice(2, 3) : data;
+
   return (
     <div className="p-[20px_0]">
       <div className="lg:max-w-[1140px] sm:max-w-[720px] max-w-[540px] mx-auto px-[14px]">
@@ -59,200 +109,15 @@ const PopularStore = () => {
           </div>
           <div className="xl:w-[80%] lg:w-[75%] slider-second cursor-pointer">
             <Slider {...settings}>
-              {SliderData.map((data, key) => (
-                <div key={key}>
-                  <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-[10px]">
+              <div className="!grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-[10px]">
+                {value1?.map((item, key) => (
+                  <div key={key}>
                     <div className="relative group transition-all">
                       <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
                         <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img2}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img3}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
-                          alt="promo"
-                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
-                        />
-                      </div>
-                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
-                        <p className="leading-4">
-                          MakeMyTrip <br />
-                          <span className="group-hover:underline">
-                            63 Coupons
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="relative group transition-all">
-                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
-                        <Image
-                          src={data.img}
+                          src={`/uploads/${item.RetailerLogo}`}
+                          width={110}
+                          height={100}
                           alt="promo"
                           className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
                         />
@@ -267,8 +132,58 @@ const PopularStore = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="!grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-[10px]">
+                {value2?.map((item, key) => (
+                  <div key={key}>
+                    <div className="relative group transition-all">
+                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
+                        <Image
+                          src={`/uploads/${item.RetailerLogo}`}
+                          width={110}
+                          height={100}
+                          alt="promo"
+                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
+                        />
+                      </div>
+                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
+                        <p className="leading-4">
+                          MakeMyTrip <br />
+                          <span className="group-hover:underline">
+                            63 Coupons
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="!grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-[10px]">
+                {value3?.map((item, key) => (
+                  <div key={key}>
+                    <div className="relative group transition-all">
+                      <div className="border-[#e7e7e7] border-[1px] relative md:h-[75px] h-[52px] overflow-hidden rounded">
+                        <Image
+                          src={`/uploads/${item.RetailerLogo}`}
+                          width={110}
+                          height={100}
+                          alt="promo"
+                          className="md:w-[121px] w-[110px] mx-auto absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]"
+                        />
+                      </div>
+                      <div className="absolute bg-[#2d3e50] w-full h-full top-0 text-white group-hover:flex justify-center items-center rounded text-[13px] hidden ">
+                        <p className="leading-4">
+                          MakeMyTrip <br />
+                          <span className="group-hover:underline">
+                            63 Coupons
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </Slider>
           </div>
         </div>

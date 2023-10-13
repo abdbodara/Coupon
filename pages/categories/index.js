@@ -1,8 +1,8 @@
 import React from "react";
 import SeeOffers from "@/components/Common/seeOffers";
+import axios from "axios";
 
-const Categories = () => {
-
+const Categories = ({ data, totalLength }) => {
   return (
     <>
       <SeeOffers
@@ -13,16 +13,45 @@ const Categories = () => {
         }
         total={"Total Categories"}
         totalOffers={"Total Coupons & Offers"}
-        merchantsdigits={"164"}
+        merchantsdigits={data.length}
         merchants={"67,568"}
         trending={"Popular Categories"}
         browse={"Browse All Categories"}
         texthide={"verticals from fashion apparel to footwear."}
         Showmore={"Show More"}
         ShowLess={"Show Less"}
+        data={data}
+        length={totalLength}
       />
     </>
   );
 };
 
 export default Categories;
+
+export async function getServerSideProps() {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/api/getCategoriesData`
+    );
+    const data = response.data.data;
+    const countLength = await axios.get(
+      "http://localhost:3000/api/countlength"
+    );
+    const length = countLength.data.data;
+    return {
+      props: {
+        data,
+        totalLength: length,
+      },
+    };
+  } catch (error) {
+    console.log("error----------->", error);
+  }
+  return {
+    props: {
+      data: [],
+      totalLength: [],
+    },
+  };
+}

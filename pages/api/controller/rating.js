@@ -30,7 +30,7 @@ const createRating = catchAsyncError(async (req, res, next) => {
 
 const getRating = catchAsyncError(async (req, res, next) => {
   try {
-    const data = await Rating.find({});
+    const data = await Rating.find();
     if (!data) {
       return next(new ErrorHandler("rating not found", 400, res));
     }

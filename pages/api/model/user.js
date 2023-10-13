@@ -30,6 +30,18 @@ const userLogin = new mongoose.Schema(
         ref: "merchantmodel",
       },
     ],
+    favoriteCoupon: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "coupon",
+      },
+    ],
+    favoriteOffer: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Offer",
+      },
+    ],
   },
   {
     timestamps: true,

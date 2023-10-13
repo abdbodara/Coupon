@@ -3,6 +3,7 @@ import SeeOffers from "@/components/Common/seeOffers";
 import axios from "axios";
 
 const Store = ({ value, totalLength }) => {
+  // console.log("value----------->", value)
   return (
     <>
       <SeeOffers
@@ -13,7 +14,7 @@ const Store = ({ value, totalLength }) => {
         }
         total={"Total Merchants"}
         totalOffers={"Total Coupons & Offers"}
-        merchantsdigits={value.length}
+        merchantsdigits={value.data.length}
         trending={"Trending Merchants"}
         browse={"Browse All Merchants"}
         texthide={
@@ -31,7 +32,7 @@ const Store = ({ value, totalLength }) => {
 export async function getServerSideProps() {
   try {
     const response = await axios.get("http://localhost:3000/api/merchant");
-    const value = response.data.data;
+    const value = response.data;
     const countLength = await axios.get(
       "http://localhost:3000/api/countlength"
     );

@@ -173,8 +173,12 @@ const Header = () => {
                   />
                 </div>
                 <Transition.Root show={open} as={Fragment}>
-                  <Dialog as="div" className="relative z-10" onClose={setOpen}>
-                    <div className="fixed inset-0 z-10 overflow-y-auto">
+                  <Dialog
+                    as="div"
+                    className="relative z-[999999999999999]"
+                    onClose={setOpen}
+                  >
+                    <div className="fixed inset-0 z-[99999999] overflow-y-auto">
                       <div className="flex min-h-full text-center p-0">
                         <Transition.Child
                           as={Fragment}

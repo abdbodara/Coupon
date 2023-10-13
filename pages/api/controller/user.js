@@ -29,7 +29,9 @@ const userLogin = catchAsyncError(async (req, res, next) => {
 const getUserProfile = catchAsyncError(async (req, res, next) => {
   try {
     const id = req?.user?.id;
-    const user = await UserModel.findOne({ _id: id });
+    const user = await UserModel.findOne({ _id: id }).populate(
+      "favoriteCoupon favoriteOffer"
+    );
     if (!user) {
       return next(new ErrorHandler("please login", 400, res));
     }
@@ -89,4 +91,85 @@ const getStore = catchAsyncError(async (req, res, next) => {
   }
 });
 
-module.exports = { userLogin, getUserProfile, addStore, getStore };
+const FavoriteCoupon = catchAsyncError(async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    let favoriteCoupon = req.params.id;
+
+    if (!Array.isArray(favoriteCoupon)) {
+      favoriteCoupon = [favoriteCoupon];
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return next(new ErrorHandler("User not found", 400, res));
+    }
+
+    const existingStore = favoriteCoupon.filter((couponId) =>
+      user.favoriteCoupon.includes(couponId)
+    );
+
+    if (existingStore.length > 0) {
+      return next(
+        new ErrorHandler(
+          `This coupon is already in the user's favorites`,
+          400,
+          res
+        )
+      );
+    }
+
+    user.favoriteCoupon.push(...favoriteCoupon);
+    await user.save();
+
+    return res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400, res));
+  }
+});
+
+const FavoriteOffer = catchAsyncError(async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    let favoriteOffer = req.params.id;
+
+    if (!Array.isArray(favoriteOffer)) {
+      favoriteOffer = [favoriteOffer];
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return next(new ErrorHandler("User not found", 400, res));
+    }
+
+    const existingStore = favoriteOffer.filter((offerId) =>
+      user.favoriteOffer.includes(offerId)
+    );
+
+    if (existingStore.length > 0) {
+      return next(
+        new ErrorHandler(
+          `This offer is already in the user's favorites`,
+          400,
+          res
+        )
+      );
+    }
+
+    user.favoriteOffer.push(...favoriteOffer);
+    await user.save();
+
+    return res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400, res));
+  }
+});
+
+module.exports = {
+  userLogin,
+  getUserProfile,
+  addStore,
+  getStore,
+  FavoriteCoupon,
+  FavoriteOffer,
+};

@@ -15,7 +15,7 @@ const createCoupon = catchAsyncError(async (req, res, next) => {
       Conditions,
       Title,
       Description,
-      categories,
+      categoriesId,
     } = req.body;
     const userId = req.user._id;
     const data = await Merchant.findOne({ RetailerName: RetailerName });
@@ -37,7 +37,7 @@ const createCoupon = catchAsyncError(async (req, res, next) => {
         Conditions,
         Title,
         Description,
-        categories,
+        categoriesId,
         userId,
       });
       return res
@@ -77,6 +77,20 @@ const getCoupon = catchAsyncError(async (req, res, next) => {
   }
 });
 
+const getCoupons = catchAsyncError(async (req, res, next) => {
+  try {
+    const data = await Coupon.find({}).populate("MerchantId");
+    if (data.length === 0) {
+      return next(
+        new ErrorHandler("user has not created any coupon", 400, res)
+      );
+    }
+    return res.status(200).json({ data: data });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400, res));
+  }
+});
+
 const getPublicCoupon = catchAsyncError(async (req, res, next) => {
   try {
     const merchantId = req.params.merchantId;
@@ -97,8 +111,8 @@ const getPublicCoupon = catchAsyncError(async (req, res, next) => {
 
 const getGateroriesData = catchAsyncError(async (req, res, next) => {
   try {
-    const { categories } = req.query;
-    const coupon = await Coupon.find({ categories: categories }).populate(
+    const { categoriesId } = req.query;
+    const coupon = await Coupon.find({ categoriesId: categoriesId }).populate(
       "MerchantId"
     );
     return res.status(200).json({ success: true, data: coupon });
@@ -131,11 +145,65 @@ const getCouponData = catchAsyncError(async (req, res, next) => {
   }
 });
 
+const updateCoupon = catchAsyncError(async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const {
+      RetailerName,
+      CouponCode,
+      ExpiryDate,
+      Conditions,
+      Title,
+      Description,
+      categoriesId,
+    } = req.body;
+    const newData = {
+      RetailerName,
+      CouponCode,
+      ExpiryDate,
+      Conditions,
+      Title,
+      Description,
+      categoriesId,
+    };
+    const userId = req.user._id;
+    const userData = await user.findById(userId);
+    if (userData.role === "admin") {
+      const coupon = await Coupon.findByIdAndUpdate({ _id: id }, newData, {
+        new: true,
+        runValidators: true,
+      });
+      return res.status(200).json({
+        success: true,
+        data: coupon,
+      });
+    }
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400, res));
+  }
+});
+
+const deleteCoupon = catchAsyncError(async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    await Coupon.findByIdAndDelete({ _id: id });
+    return res.status(200).json({
+      success: true,
+      message: "coupon hass been deleted",
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400, res));
+  }
+});
+
 module.exports = {
   createCoupon,
   getCoupon,
+  getCoupons,
   getPublicCoupon,
   getGateroriesData,
   getCouponLength,
   getCouponData,
+  updateCoupon,
+  deleteCoupon,
 };

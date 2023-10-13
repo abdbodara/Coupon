@@ -47,10 +47,6 @@ const Login = ({ setIsOpen }) => {
               <h1 className="text-[#2f3843] lg:text-[25px] text-[22px] font-bold text-center">
                 Log In
               </h1>
-              <button className="bg-[#3a5996] p-[10px_24px] text-white w-full text-center relative rounded-[3px] mt-[25px]">
-                <AiFillFacebook className="absolute left-[24px] text-[20px]" />
-                Continue with Facebook
-              </button>
               <Google />
             </div>
           </div>

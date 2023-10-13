@@ -190,7 +190,7 @@ const PopularCard = ({ data, offerdata, categories }) => {
           </div>
         </div>
       </div>
-      <PopularStore />
+      <PopularStore data={data} />
       <CouponOffer />
       <Deals categories={categories} />
       <Collection />

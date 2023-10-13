@@ -5,25 +5,20 @@ import Image from "next/image";
 import {
   AiFillCheckCircle,
   AiFillHeart,
-  AiFillRightCircle,
   AiFillStar,
-  AiOutlineClockCircle,
   AiOutlineStar,
 } from "react-icons/ai";
 import { PiStarThin } from "react-icons/pi";
 import { Switch } from "@headlessui/react";
 import { GoSearch } from "react-icons/go";
-import { BsCheck2, BsChevronRight, BsDot } from "react-icons/bs";
-import { FaUsers } from "react-icons/fa";
-import IconMessage from "@/components/Icons/IconMessage";
-import { HiOutlineThumbUp } from "react-icons/hi";
-import { LuShare2 } from "react-icons/lu";
-import { GrClose } from "react-icons/gr";
+import { BsCheck2, BsChevronRight } from "react-icons/bs";
 import { RatingModal } from "@/components/Common/RatingModal";
 import ExpiredCoupons from "@/components/Coupon/ExpiredCoupons";
 import ProductDetail from "@/components/ProductDetail";
 import Subscribe from "./deals/Subscribe";
-import { useRouter } from "next/router";
+import Offers from "./coupon_data/offers";
+import Coupons from "./coupon_data/coupon";
+import { useSelectedCardContext } from "@/context/createContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -40,6 +35,7 @@ const filterTabs = [
   { name: "Monitors", href: "#", current: false },
 ];
 const Test = ({ data, rating }) => {
+  const { profile, Rating, state } = useSelectedCardContext();
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
   const [Open, setIOpen] = useState(false);
@@ -47,16 +43,32 @@ const Test = ({ data, rating }) => {
   const [showMore, setShowMore] = useState({ id: "", status: false });
   const [filterTab, setFilterTab] = useState("All");
   const [tab, setTab] = useState("All");
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [enabled, setEnabled] = useState(false);
 
-  const router = useRouter();
   const openInNewTab = (url) => {
     window.open(url);
   };
 
   const firstImage = data[0] && data[0].coupon && data[0].coupon[0];
+  const matchRating = firstImage?.MerchantId?._id;
+  const matchingRatings =
+    state === true
+      ? Rating.filter(
+          (item) => item.userId === profile?._id && item.itemId === matchRating
+        )
+      : rating.filter(
+          (item) => item.userId === profile?._id && item.itemId === matchRating
+        );
+  const matchingRating2 =
+    state === true
+      ? Rating.filter((item) => item.itemId === matchRating)
+      : rating.filter((item) => item.itemId === matchRating);
 
+  const matchRating2 = matchingRatings.map((item, key) => {
+    return item.itemId;
+  });
+  const test = matchRating2?.toString();
   const couponCount = data.reduce((count, item) => {
     if (item.coupon) {
       return count + item.coupon.length;
@@ -83,25 +95,23 @@ const Test = ({ data, rating }) => {
             </Link>
             <span className="px-[4px]">/</span>
             <Link href="/" className="opacity-70 hover:opacity-100">
-              Electronics
+              {firstImage?.MerchantId?.RetailerName}
             </Link>
             <span className="px-[4px]">/</span>
-            <Link href="/" className="opacity-70 hover:opacity-100">
-              Laptops
-            </Link>
-            <span className="px-[4px]">/</span>
-            <p>Laptops</p>
+            <p>{firstImage?.MerchantId?.RetailerName} Coupons</p>
           </div>
           <div className="flex lg:gap-[24px] gap-[12px]">
             <div className="relative w-[240px] group h-[190px] flex-none max-lg:w-[115px] max-lg:h-[95px]">
               <button
-                onClick={() => openInNewTab(firstImage.MerchantId.RetailerUrl)}
+                onClick={() =>
+                  openInNewTab(firstImage?.MerchantId?.RetailerUrl)
+                }
                 className="absolute group-hover:opacity-100 opacity-0 transition duration-100 text-[16px] text-[#373737] flex items-center justify-center font-[700] inset-0 bg-white/[0.9]"
               >
                 Visit Store
               </button>
               <Image
-                src={`/uploads/${firstImage.MerchantId.RetailerLogo}`}
+                src={`/uploads/${firstImage?.MerchantId?.RetailerLogo}`}
                 alt="submit"
                 width={240}
                 height={190}
@@ -111,7 +121,7 @@ const Test = ({ data, rating }) => {
             <div className="text-white flex-1">
               <div className="relative items-center lg:flex justify-between flex-wrap">
                 <h1 className="lg:text-[28px] flex items-center gap-3 text-[18px] font-bold max-sm:text-[15px]">
-                  Dell Coupon Code India
+                  {firstImage?.MerchantId?.RetailerName}
                   <AiFillHeart
                     className={`${
                       click ? "text-red-500 animation-jump" : "text-gray-500"
@@ -144,24 +154,46 @@ const Test = ({ data, rating }) => {
                 </div>
                 <div className="divide-x gap-[12px]  flex items-center max-lg:hidden">
                   <div className="flex items-center ">
-                    <AiFillStar className="text-[36px] fill-[#ffb125] stroke-[#ffb125]  " />
+                    <AiFillStar className="text-[36px] fill-[#ffb125] stroke-[#ffb125]" />
                     <p className="text-white leading-4 text-[16px]">
                       4<small className="text-[#bebebe] text-[10px]">/ 5</small>
                       <span className="text-[#bebebe] leading-4 block text-[10px]">
-                        <span className="go-r-count">48</span>
+                        <span className="go-r-count">
+                          {matchingRating2.length}{" "}
+                        </span>
                         Votes
                       </span>
                     </p>
                   </div>
-                  <button
-                    onClick={() => setIsOpen(true)}
-                    className="flex items-center pl-[12px]"
-                  >
-                    <PiStarThin className="text-[36px] fill-[#979797] stroke-[#ffb125]" />
-                    <p className="text-white leading-4 text-[16px]">
-                      4<small className="text-[#bebebe] text-[10px]">/ 5</small>
-                    </p>
-                  </button>
+                  {test === matchRating ? (
+                    <>
+                      <button className="flex items-center pl-[12px]">
+                        <AiFillStar className="text-[36px] fill-[#8db654] stroke-[#8db654]" />
+                        {matchingRatings.map((item, key) => (
+                          <p
+                            key={key}
+                            className="text-[#bebebe] leading-4 text-[16px]"
+                          >
+                            Rated <br />
+                            {item.value}/5
+                          </p>
+                        ))}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="flex items-center pl-[12px]">
+                        <PiStarThin
+                          onClick={() => setIsOpen(true)}
+                          className="text-[36px] fill-[#979797] stroke-[#ffb125]"
+                        />
+                        <p className="text-[#bebebe] leading-4 text-[16px]">
+                          Rate <br />
+                          This
+                        </p>
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="lg:text-[14px] min-h-[38px] flex  gap-2 text-[10px] text-[#bac1c2]  max-lg:hidden">
@@ -169,7 +201,7 @@ const Test = ({ data, rating }) => {
                 <span className="px-[4px]">|</span>
 
                 <p className="flex">
-                  <AiFillCheckCircle className="text-[#8db654] mr-2 w-[12px] bg-white rounded-full h-[12px]" />
+                  <AiFillCheckCircle className="text-[#8db654] mt-[3px] mr-2 w-[12px] bg-white rounded-full h-[12px]" />
                   {totalLength} Verified
                 </p>
                 <span className="px-[4px]">|</span>
@@ -535,579 +567,34 @@ const Test = ({ data, rating }) => {
               <div>
                 {tab === "All" ? (
                   <>
-                    {data.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          {item.coupon &&
-                            item.coupon.map((couponItem, couponIndex) => (
-                              <div key={couponIndex}>
-                                <div className="border mb-[12px] border-[#dadada] bg-[#fff]">
-                                  <div className="min-h-[90px] lg:min-h-[200px] lg:pt-[12px] pl-[8px] lg:px-[18px]">
-                                    <div className="lg:mt-[8px] mb-[6px]">
-                                      <span className="text-[10px] lg:text-[24px] mt-[6px] font-bold text-[#515151]">
-                                        {couponItem.Title}
-                                      </span>
-                                    </div>
-                                    <div className="flex w-[calc(100%_-_110px)] lg:w-full">
-                                      <div className="flex-1">
-                                        <p className="text-[16px] text-[#373737]">
-                                          {couponItem.Description}
-                                        </p>
-                                      </div>
-                                      <div className="gcbr-r">
-                                        <button className="w-[25px] text-[25px] h-[25px] block lg:hidden">
-                                          <AiFillRightCircle className="text-[#2491ef]" />
-                                        </button>
-                                        <p className="hidden items-center gap-2 mb-[14px] lg:flex">
-                                          <span className="text-[#8eb55a] gap-[3px] flex items-center text-[13px] font-medium">
-                                            <AiFillCheckCircle /> Verified
-                                          </span>
-                                          <BsDot className="text-[#787878] " />
-                                          <span className="text-[#787878] gap-[3px] flex items-center text-[12px]">
-                                            <FaUsers />
-                                            <span className="bold-me">4</span>
-                                            uses today
-                                          </span>
-                                        </p>
-                                        <span className="w-[245px] hidden bg-[#e5e5e5] lg:block h-[40px] relative z-[1] border-[1.5px] border-dashed border-[#979797]">
-                                          <span className="hidden-lg"></span>
-                                          <span className="text-[14px] font-bold block pr-[18px] leading-[40px] text-right">
-                                            {couponItem.CouponCode}
-                                          </span>
-                                          <div
-                                            className="bg-[#80b942] cursor-pointer text-white absolute text-[13px] font-bold leading-[43px] pl-[24px] top-[-2px] left-[-2px] w-[211px] rounded-[4px_2px_2px_4px] shadow-[0_2px_4px_0_rgba(157,157,157,.5)]"
-                                            onClick={() => {
-                                              openInNewTab(
-                                                `/coupon_codes/${couponItem._id}`
-                                              );
-                                              router.push(
-                                                `/redeems/${couponItem._id}`
-                                              );
-                                            }}
-                                          >
-                                            SHOW COUPON CODE
-                                          </div>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <ul className="border-t border-[#d6d8da] flex items-center bg-white text-[13px] min-h-[28px] py-[7px] pl-[16px] pr-[8px]">
-                                    <div className="flex-1 block lg:hidden ">
-                                      <li className="ml-[30px] text-[14px] text-[#797979]">
-                                        <span className="font-[600]">5</span>
-                                        uses today
-                                      </li>
-                                    </div>
-                                    <div className="hidden lg:flex items-center flex-1 gap-[10px]">
-                                      <li className="lg:hidden verified-m">
-                                        <span>Verified</span>
-                                      </li>
-                                      <li className="lg:block hidden verified-m">
-                                        <button
-                                          onClick={() =>
-                                            setShowMore({
-                                              id: couponItem?._id,
-                                              status: !showMore?.status,
-                                            })
-                                          }
-                                          className="text-[#509cde] font-bold text-[14px]"
-                                        >
-                                          {showMore?.status &&
-                                          showMore?.id === couponItem?._id
-                                            ? "Hide Details"
-                                            : "Show Details"}
-                                        </button>
-                                      </li>
-                                      <li>
-                                        <BsDot className="text-[#787878] " />
-                                      </li>
-                                      <li className="lg:hidden usr">
-                                        <span>
-                                          <span className="bold-me">5</span>
-                                          uses today
-                                        </span>
-                                      </li>
-                                      <li className="c-show-det">
-                                        <span className="text-[#797979] flex gap-[4px] items-center text-[14px]">
-                                          <IconMessage /> Comments
-                                        </span>
-                                      </li>
-
-                                      <li>
-                                        <BsDot className="text-[#787878] " />
-                                      </li>
-                                      <li className="hidden lg:flex gap-[4px] items-center text-[#797979]  text-[14px]">
-                                        <AiOutlineClockCircle className="text-[16px]" />
-                                        Valid till {couponItem.ExpiryDate}
-                                      </li>
-                                    </div>
-                                    <div className="block lg:hidden">
-                                      <span>Verified</span>
-                                    </div>
-                                    <div className="hidden  items-center  lg:flex">
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <LuShare2 />
-                                      </li>
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <HiOutlineThumbUp />
-                                      </li>
-                                    </div>
-                                  </ul>
-                                  <div
-                                    className={`${
-                                      showMore?.status &&
-                                      showMore?.id === couponItem?._id
-                                        ? "block"
-                                        : "hidden"
-                                    } bg-[#f4f4f4] relative p-[12px_24px_24px]`}
-                                  >
-                                    <button
-                                      onClick={() => setShowMore(false)}
-                                      className="absolute top-[5px] text-[#d6d8da] right-[10px]"
-                                    >
-                                      <GrClose className="text-[#d6d8da]" />
-                                    </button>
-                                    <ul className="list-inside">
-                                      {couponItem.Conditions}
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      );
-                    })}
-
+                    <Coupons
+                      data={data}
+                      setShowMore={setShowMore}
+                      showMore={showMore}
+                    />
                     <>
-                      {data.map((item, index) => {
-                        return (
-                          <div key={index}>
-                            {item.offer &&
-                              item.offer.map((offerItem, offerIndex) => (
-                                <div key={offerIndex}>
-                                  <div className="border mb-[12px] border-[#dadada] bg-[#fff]">
-                                    <div className="min-h-[90px] lg:min-h-[200px] lg:pt-[12px] pl-[8px] lg:px-[18px]">
-                                      <div className="lg:mt-[8px] mb-[6px]">
-                                        <span className="text-[8px] lg:text-[24px] mt-[6px] font-bold text-[#515151]">
-                                          {offerItem.title}
-                                        </span>
-                                      </div>
-                                      <div className="flex w-[calc(100%_-_110px)] lg:w-full">
-                                        <div className="flex-1">
-                                          <p className="text-[16px] text-[#373737]">
-                                            {offerItem.desc}
-                                          </p>
-                                        </div>
-                                        <div className="gcbr-r">
-                                          <button className="w-[25px] text-[25px] h-[25px] block lg:hidden">
-                                            <AiFillRightCircle className="text-[#2491ef]" />
-                                          </button>
-                                          <p className="hidden items-center gap-2 mb-[14px] lg:flex">
-                                            <span className="text-[#8eb55a] gap-[3px] flex items-center text-[13px] font-medium">
-                                              <AiFillCheckCircle /> Verified
-                                            </span>
-                                            <BsDot className="text-[#787878] " />
-                                            <span className="text-[#787878] gap-[3px] flex items-center text-[12px]">
-                                              <FaUsers />
-                                              <span className="bold-me">4</span>
-                                              uses today
-                                            </span>
-                                          </p>
-                                          <span className="w-[245px] hidden bg-[#e5e5e5] lg:block h-[40px] relative z-[1] border-[1.5px] border-dashed border-[#979797]">
-                                            <span className="hidden-lg"></span>
-                                            <span className="text-[14px] font-bold block pr-[18px] leading-[40px] text-right">
-                                              {offerItem.offer}
-                                            </span>
-                                            <div
-                                              className="bg-[#2491ef] cursor-pointer text-white absolute text-[13px] font-bold leading-[43px] pl-[24px] top-[-2px] left-[-2px] w-[211px] rounded-[4px_2px_2px_4px] shadow-[0_2px_4px_0_rgba(157,157,157,.5)]"
-                                              onClick={() => {
-                                                openInNewTab(
-                                                  `/coupon_code/${offerItem._id}`
-                                                );
-                                                router.push(
-                                                  `/redeem/${offerItem._id}`
-                                                );
-                                              }}
-                                            >
-                                              GET DEAL
-                                            </div>
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <ul className="border-t border-[#d6d8da] flex items-center bg-white text-[13px] min-h-[28px] py-[7px] pl-[16px] pr-[8px]">
-                                      <div className="flex-1 block lg:hidden ">
-                                        <li className="ml-[30px] text-[14px] text-[#797979]">
-                                          <span className="font-[600]">5</span>
-                                          uses today
-                                        </li>
-                                      </div>
-                                      <div className="hidden lg:flex items-center flex-1 gap-[10px]">
-                                        <li className="lg:hidden verified-m">
-                                          <span>Verified</span>
-                                        </li>
-                                        <li className="lg:block hidden verified-m">
-                                          <button
-                                            onClick={() =>
-                                              setShowMore({
-                                                id: offerItem?._id,
-                                                status: !showMore?.status,
-                                              })
-                                            }
-                                            className="text-[#509cde] font-bold text-[14px]"
-                                          >
-                                            {showMore?.status &&
-                                            showMore?.id === offerItem?._id
-                                              ? "Hide Details"
-                                              : "Show Details"}
-                                          </button>
-                                        </li>
-                                        <li>
-                                          <BsDot className="text-[#787878] " />
-                                        </li>
-                                        <li className="lg:hidden usr">
-                                          <span>
-                                            <span className="bold-me">5</span>
-                                            uses today
-                                          </span>
-                                        </li>
-                                        <li className="c-show-det">
-                                          <span className="text-[#797979] flex gap-[4px] items-center text-[14px]">
-                                            <IconMessage /> Comments
-                                          </span>
-                                        </li>
-                                      </div>
-                                      <div className="block lg:hidden">
-                                        <span>Verified</span>
-                                      </div>
-                                      <div className="hidden  items-center  lg:flex">
-                                        <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                          <LuShare2 />
-                                        </li>
-                                        <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                          <HiOutlineThumbUp />
-                                        </li>
-                                      </div>
-                                    </ul>
-                                    <div
-                                      className={`${
-                                        showMore?.status &&
-                                        showMore?.id === offerItem?._id
-                                          ? "block"
-                                          : "hidden"
-                                      } bg-[#f4f4f4] relative p-[12px_24px_24px]`}
-                                    >
-                                      <button
-                                        onClick={() => setShowMore(false)}
-                                        className="absolute top-[5px] text-[#d6d8da] right-[10px]"
-                                      >
-                                        <GrClose className="text-[#d6d8da]" />
-                                      </button>
-                                      <ul className="list-inside">
-                                        {offerItem.conditions}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                          </div>
-                        );
-                      })}
+                      <Offers
+                        data={data}
+                        setShowMore={setShowMore}
+                        showMore={showMore}
+                      />
                     </>
                   </>
                 ) : tab === "Coupons" ? (
                   <>
-                    {data.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          {item.coupon &&
-                            item.coupon.map((couponItem, couponIndex) => (
-                              <div key={couponIndex}>
-                                {console.log(
-                                  "couponItem----------->",
-                                  couponItem._id
-                                )}
-                                <div className="border mb-[12px] border-[#dadada] bg-[#fff]">
-                                  <div className="min-h-[90px] lg:min-h-[200px] lg:pt-[12px] pl-[8px] lg:px-[18px]">
-                                    <div className="lg:mt-[8px] mb-[6px]">
-                                      <span className="text-[8px] lg:text-[24px] mt-[6px] font-bold text-[#515151]">
-                                        {couponItem.Title}
-                                      </span>
-                                    </div>
-                                    <div className="flex w-[calc(100%_-_110px)] lg:w-full">
-                                      <div className="flex-1">
-                                        <p className="text-[16px] text-[#373737]">
-                                          {couponItem.Description}
-                                        </p>
-                                      </div>
-                                      <div className="gcbr-r">
-                                        <button className="w-[25px] text-[25px] h-[25px] block lg:hidden">
-                                          <AiFillRightCircle className="text-[#2491ef]" />
-                                        </button>
-                                        <p className="hidden items-center gap-2 mb-[14px] lg:flex">
-                                          <span className="text-[#8eb55a] gap-[3px] flex items-center text-[13px] font-medium">
-                                            <AiFillCheckCircle /> Verified
-                                          </span>
-                                          <BsDot className="text-[#787878] " />
-                                          <span className="text-[#787878] gap-[3px] flex items-center text-[12px]">
-                                            <FaUsers />
-                                            <span className="bold-me">4</span>
-                                            uses today
-                                          </span>
-                                        </p>
-                                        <span className="w-[245px] hidden bg-[#e5e5e5] lg:block h-[40px] relative z-[1] border-[1.5px] border-dashed border-[#979797]">
-                                          <span className="hidden-lg"></span>
-                                          <span className="text-[14px] font-bold block pr-[18px] leading-[40px] text-right">
-                                            {couponItem.CouponCode}
-                                          </span>
-                                          <div
-                                            className="bg-[#80b942] cursor-pointer text-white absolute text-[13px] font-bold leading-[43px] pl-[24px] top-[-2px] left-[-2px] w-[211px] rounded-[4px_2px_2px_4px] shadow-[0_2px_4px_0_rgba(157,157,157,.5)]"
-                                            onClick={() => {
-                                              openInNewTab(
-                                                `/coupon_codes/${couponItem._id}`
-                                              );
-                                              router.push(
-                                                `/redeems/${couponItem._id}`
-                                              );
-                                            }}
-                                            // onClick={() => {
-                                            //   openInNewTab(
-                                            //     `/coupon_code/${couponItem._id}?merchantId=${couponItem.MerchantId._id}`
-                                            //   );
-                                            //   router.push(
-                                            //     `/redeem/${couponItem._id}?merchantId=${couponItem.MerchantId._id}`
-                                            //   );
-                                            // }}
-                                          >
-                                            SHOW COUPON CODE
-                                          </div>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <ul className="border-t border-[#d6d8da] flex items-center bg-white text-[13px] min-h-[28px] py-[7px] pl-[16px] pr-[8px]">
-                                    <div className="flex-1 block lg:hidden ">
-                                      <li className="ml-[30px] text-[14px] text-[#797979]">
-                                        <span className="font-[600]">5</span>
-                                        uses today
-                                      </li>
-                                    </div>
-                                    <div className="hidden lg:flex items-center flex-1 gap-[10px]">
-                                      <li className="lg:hidden verified-m">
-                                        <span>Verified</span>
-                                      </li>
-                                      <li className="lg:block hidden verified-m">
-                                        <button
-                                          onClick={() =>
-                                            setShowMore({
-                                              id: couponItem?._id,
-                                              status: !showMore?.status,
-                                            })
-                                          }
-                                          className="text-[#509cde] font-bold text-[14px]"
-                                        >
-                                          {showMore?.status &&
-                                          showMore?.id === couponItem?._id
-                                            ? "Hide Details"
-                                            : "Show Details"}
-                                        </button>
-                                      </li>
-                                      <li>
-                                        <BsDot className="text-[#787878] " />
-                                      </li>
-                                      <li className="lg:hidden usr">
-                                        <span>
-                                          <span className="bold-me">5</span>
-                                          uses today
-                                        </span>
-                                      </li>
-                                      <li className="c-show-det">
-                                        <span className="text-[#797979] flex gap-[4px] items-center text-[14px]">
-                                          <IconMessage /> Comments
-                                        </span>
-                                      </li>
-
-                                      <li>
-                                        <BsDot className="text-[#787878] " />
-                                      </li>
-                                      <li className="hidden lg:flex gap-[4px] items-center text-[#797979]  text-[14px]">
-                                        <AiOutlineClockCircle className="text-[16px]" />
-                                        Valid till {couponItem.ExpiryDate}
-                                      </li>
-                                    </div>
-                                    <div className="block lg:hidden">
-                                      <span>Verified</span>
-                                    </div>
-                                    <div className="hidden  items-center  lg:flex">
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <LuShare2 />
-                                      </li>
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <HiOutlineThumbUp />
-                                      </li>
-                                    </div>
-                                  </ul>
-                                  <div
-                                    className={`${
-                                      showMore?.status &&
-                                      showMore?.id === couponItem?._id
-                                        ? "block"
-                                        : "hidden"
-                                    } bg-[#f4f4f4] relative p-[12px_24px_24px]`}
-                                  >
-                                    <button
-                                      onClick={() => setShowMore(false)}
-                                      className="absolute top-[5px] text-[#d6d8da] right-[10px]"
-                                    >
-                                      <GrClose className="text-[#d6d8da]" />
-                                    </button>
-                                    <ul className="list-inside">
-                                      {couponItem.Conditions}
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      );
-                    })}
+                    <Coupons
+                      data={data}
+                      setShowMore={setShowMore}
+                      showMore={showMore}
+                    />
                   </>
                 ) : tab === "Offers" ? (
                   <>
-                    {data.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          {item.offer &&
-                            item.offer.map((offerItem, offerIndex) => (
-                              <div key={offerIndex}>
-                                <div className="border mb-[12px] border-[#dadada] bg-[#fff]">
-                                  <div className="min-h-[90px] lg:min-h-[200px] lg:pt-[12px] pl-[8px] lg:px-[18px]">
-                                    <div className="lg:mt-[8px] mb-[6px]">
-                                      <span className="text-[8px] lg:text-[24px] mt-[6px] font-bold text-[#515151]">
-                                        {offerItem.title}
-                                      </span>
-                                    </div>
-                                    <div className="flex w-[calc(100%_-_110px)] lg:w-full">
-                                      <div className="flex-1">
-                                        <p className="text-[16px] text-[#373737]">
-                                          {offerItem.desc}
-                                        </p>
-                                      </div>
-                                      <div className="gcbr-r">
-                                        <button className="w-[25px] text-[25px] h-[25px] block lg:hidden">
-                                          <AiFillRightCircle className="text-[#2491ef]" />
-                                        </button>
-                                        <p className="hidden items-center gap-2 mb-[14px] lg:flex">
-                                          <span className="text-[#8eb55a] gap-[3px] flex items-center text-[13px] font-medium">
-                                            <AiFillCheckCircle /> Verified
-                                          </span>
-                                          <BsDot className="text-[#787878] " />
-                                          <span className="text-[#787878] gap-[3px] flex items-center text-[12px]">
-                                            <FaUsers />
-                                            <span className="bold-me">4</span>
-                                            uses today
-                                          </span>
-                                        </p>
-                                        <span className="w-[245px] hidden bg-[#e5e5e5] lg:block h-[40px] relative z-[1] border-[1.5px] border-dashed border-[#979797]">
-                                          <span className="hidden-lg"></span>
-                                          <span className="text-[14px] font-bold block pr-[18px] leading-[40px] text-right">
-                                            {offerItem.offer}
-                                          </span>
-                                          <div
-                                            className="bg-[#2491ef] cursor-pointer text-white absolute text-[13px] font-bold leading-[43px] pl-[24px] top-[-2px] left-[-2px] w-[211px] rounded-[4px_2px_2px_4px] shadow-[0_2px_4px_0_rgba(157,157,157,.5)]"
-                                            onClick={() => {
-                                              openInNewTab(
-                                                `/coupon_code/${offerItem._id}`
-                                              );
-                                              router.push(
-                                                `/redeem/${offerItem._id}`
-                                              );
-                                            }}
-                                          >
-                                            GET DEAL
-                                          </div>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <ul className="border-t border-[#d6d8da] flex items-center bg-white text-[13px] min-h-[28px] py-[7px] pl-[16px] pr-[8px]">
-                                    <div className="flex-1 block lg:hidden ">
-                                      <li className="ml-[30px] text-[14px] text-[#797979]">
-                                        <span className="font-[600]">5</span>
-                                        uses today
-                                      </li>
-                                    </div>
-                                    <div className="hidden lg:flex items-center flex-1 gap-[10px]">
-                                      <li className="lg:hidden verified-m">
-                                        <span>Verified</span>
-                                      </li>
-                                      <li className="lg:block hidden verified-m">
-                                        <button
-                                          onClick={() =>
-                                            setShowMore({
-                                              id: offerItem?._id,
-                                              status: !showMore?.status,
-                                            })
-                                          }
-                                          className="text-[#509cde] font-bold text-[14px]"
-                                        >
-                                          {showMore?.status &&
-                                          showMore?.id === offerItem?._id
-                                            ? "Hide Details"
-                                            : "Show Details"}
-                                        </button>
-                                      </li>
-                                      <li>
-                                        <BsDot className="text-[#787878] " />
-                                      </li>
-                                      <li className="lg:hidden usr">
-                                        <span>
-                                          <span className="bold-me">5</span>
-                                          uses today
-                                        </span>
-                                      </li>
-                                      <li className="c-show-det">
-                                        <span className="text-[#797979] flex gap-[4px] items-center text-[14px]">
-                                          <IconMessage /> Comments
-                                        </span>
-                                      </li>
-                                    </div>
-                                    <div className="block lg:hidden">
-                                      <span>Verified</span>
-                                    </div>
-                                    <div className="hidden  items-center  lg:flex">
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <LuShare2 />
-                                      </li>
-                                      <li className="text-[14px] p-[2px_5px] text-[#797979]">
-                                        <HiOutlineThumbUp />
-                                      </li>
-                                    </div>
-                                  </ul>
-                                  <div
-                                    className={`${
-                                      showMore?.status &&
-                                      showMore?.id === offerItem?._id
-                                        ? "block"
-                                        : "hidden"
-                                    } bg-[#f4f4f4] relative p-[12px_24px_24px]`}
-                                  >
-                                    <button
-                                      onClick={() => setShowMore(false)}
-                                      className="absolute top-[5px] text-[#d6d8da] right-[10px]"
-                                    >
-                                      <GrClose className="text-[#d6d8da]" />
-                                    </button>
-                                    <ul className="list-inside">
-                                      {offerItem.conditions}
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      );
-                    })}
+                    <Offers
+                      data={data}
+                      setShowMore={setShowMore}
+                      showMore={showMore}
+                    />
                   </>
                 ) : (
                   ""
@@ -1121,7 +608,12 @@ const Test = ({ data, rating }) => {
           </div>
         </div>
       </div>
-      <RatingModal setIsOpen={setIsOpen} isOpen={isOpen} data={firstImage} />
+      <RatingModal
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+        data={firstImage}
+        rating={matchingRating2}
+      />
       <Subscribe />
     </div>
   );
@@ -1138,7 +630,6 @@ export async function getServerSideProps(context) {
     const response = await axios.get(
       `http://localhost:3000/api/getPublicCoupon/${merchantId}`
     );
-
     const responseData = await axios.get("http://localhost:3000/api/getRating");
     const rating = responseData.data.data;
     const data = response.data.data;
@@ -1150,7 +641,6 @@ export async function getServerSideProps(context) {
     };
   } catch (error) {
     console.error("Error fetching data:", error);
-
     return {
       props: {
         data: [],
